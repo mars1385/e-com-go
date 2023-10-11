@@ -5,29 +5,38 @@ import (
 	"net/http"
 )
 
-func SuccessResponse(w http.ResponseWriter, data interface{}) interface{} {
+type ResponseFormat struct {
+	Message string
+	Data    interface{}
+}
+
+func SuccessResponse(w http.ResponseWriter, result ResponseFormat) interface{} {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+
 	return json.NewEncoder(w).Encode(map[string]interface{}{
-		"message": "success",
-		"data":    &data,
+		"success": true,
+		"message": &result.Message,
+		"result":  &result.Data,
 	})
 }
 
-func BadRequest(w http.ResponseWriter, data interface{}) interface{} {
+func BadRequest(w http.ResponseWriter, result ResponseFormat) interface{} {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusBadRequest)
 	return json.NewEncoder(w).Encode(map[string]interface{}{
-		"message": "data validation failed",
-		"data":    &data,
+		"success": false,
+		"message": &result.Message,
+		"result":  &result.Data,
 	})
 }
 
-func InternalServerError(w http.ResponseWriter, data interface{}) interface{} {
+func InternalServerError(w http.ResponseWriter, result ResponseFormat) interface{} {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
 	return json.NewEncoder(w).Encode(map[string]interface{}{
-		"message": "internal server error",
-		"data":    &data,
+		"success": false,
+		"message": &result.Message,
+		"result":  &result.Data,
 	})
 }

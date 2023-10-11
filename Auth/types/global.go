@@ -7,3 +7,8 @@ type Config struct {
 type Application struct {
 	Config Config
 }
+
+type SuccessResponse struct {
+	message string
+	data    interface{}
+}
