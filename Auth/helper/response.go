@@ -8,6 +8,7 @@ import (
 type ResponseFormat struct {
 	Message string
 	Data    interface{}
+	Status  int
 }
 
 func SuccessResponse(w http.ResponseWriter, result ResponseFormat) interface{} {
@@ -23,11 +24,16 @@ func SuccessResponse(w http.ResponseWriter, result ResponseFormat) interface{} {
 
 func BadRequest(w http.ResponseWriter, result ResponseFormat) interface{} {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusBadRequest)
+	status := http.StatusBadRequest
+
+	if result.Status > 0 {
+		status = result.Status
+	}
+	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": false,
 		"message": &result.Message,
-		"result":  &result.Data,
+		"error":   &result.Data,
 	})
 }
 
@@ -37,6 +43,6 @@ func InternalServerError(w http.ResponseWriter, result ResponseFormat) interface
 	return json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": false,
 		"message": &result.Message,
-		"result":  &result.Data,
+		"error":   &result.Data,
 	})
 }

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"E-COM/config"
-	logger "E-COM/helper"
-	"E-COM/router"
+	"AUTH/config"
+	logger "AUTH/helper"
+	"AUTH/router"
 	"net/http"
 )
 

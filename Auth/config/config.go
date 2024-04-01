@@ -1,7 +1,7 @@
 package config
 
 import (
-	logger "E-COM/helper"
+	logger "AUTH/helper"
 
 	"github.com/spf13/viper"
 )
