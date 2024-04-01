@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"AUTH/ent/login"
 	"AUTH/ent/user"
 	"context"
 	"errors"
@@ -35,6 +36,46 @@ func (uc *UserCreate) SetPassword(s string) *UserCreate {
 // SetName sets the "name" field.
 func (uc *UserCreate) SetName(s string) *UserCreate {
 	uc.mutation.SetName(s)
+	return uc
+}
+
+// SetIP sets the "ip" field.
+func (uc *UserCreate) SetIP(s string) *UserCreate {
+	uc.mutation.SetIP(s)
+	return uc
+}
+
+// SetDevice sets the "device" field.
+func (uc *UserCreate) SetDevice(s string) *UserCreate {
+	uc.mutation.SetDevice(s)
+	return uc
+}
+
+// SetVerified sets the "verified" field.
+func (uc *UserCreate) SetVerified(b bool) *UserCreate {
+	uc.mutation.SetVerified(b)
+	return uc
+}
+
+// SetNillableVerified sets the "verified" field if the given value is not nil.
+func (uc *UserCreate) SetNillableVerified(b *bool) *UserCreate {
+	if b != nil {
+		uc.SetVerified(*b)
+	}
+	return uc
+}
+
+// SetBlocked sets the "blocked" field.
+func (uc *UserCreate) SetBlocked(b bool) *UserCreate {
+	uc.mutation.SetBlocked(b)
+	return uc
+}
+
+// SetNillableBlocked sets the "blocked" field if the given value is not nil.
+func (uc *UserCreate) SetNillableBlocked(b *bool) *UserCreate {
+	if b != nil {
+		uc.SetBlocked(*b)
+	}
 	return uc
 }
 
@@ -72,6 +113,21 @@ func (uc *UserCreate) SetNillableUpdatedAt(t *time.Time) *UserCreate {
 	return uc
 }
 
+// AddLoginIDs adds the "logins" edge to the Login entity by IDs.
+func (uc *UserCreate) AddLoginIDs(ids ...int) *UserCreate {
+	uc.mutation.AddLoginIDs(ids...)
+	return uc
+}
+
+// AddLogins adds the "logins" edges to the Login entity.
+func (uc *UserCreate) AddLogins(l ...*Login) *UserCreate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return uc.AddLoginIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uc *UserCreate) Mutation() *UserMutation {
 	return uc.mutation
@@ -107,6 +163,14 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
+	if _, ok := uc.mutation.Verified(); !ok {
+		v := user.DefaultVerified
+		uc.mutation.SetVerified(v)
+	}
+	if _, ok := uc.mutation.Blocked(); !ok {
+		v := user.DefaultBlocked
+		uc.mutation.SetBlocked(v)
+	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		v := user.DefaultCreatedAt()
 		uc.mutation.SetCreatedAt(v)
@@ -127,6 +191,18 @@ func (uc *UserCreate) check() error {
 	}
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
+	}
+	if _, ok := uc.mutation.IP(); !ok {
+		return &ValidationError{Name: "ip", err: errors.New(`ent: missing required field "User.ip"`)}
+	}
+	if _, ok := uc.mutation.Device(); !ok {
+		return &ValidationError{Name: "device", err: errors.New(`ent: missing required field "User.device"`)}
+	}
+	if _, ok := uc.mutation.Verified(); !ok {
+		return &ValidationError{Name: "verified", err: errors.New(`ent: missing required field "User.verified"`)}
+	}
+	if _, ok := uc.mutation.Blocked(); !ok {
+		return &ValidationError{Name: "blocked", err: errors.New(`ent: missing required field "User.blocked"`)}
 	}
 	if _, ok := uc.mutation.Username(); !ok {
 		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "User.username"`)}
@@ -175,6 +251,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
+	if value, ok := uc.mutation.IP(); ok {
+		_spec.SetField(user.FieldIP, field.TypeString, value)
+		_node.IP = value
+	}
+	if value, ok := uc.mutation.Device(); ok {
+		_spec.SetField(user.FieldDevice, field.TypeString, value)
+		_node.Device = value
+	}
+	if value, ok := uc.mutation.Verified(); ok {
+		_spec.SetField(user.FieldVerified, field.TypeBool, value)
+		_node.Verified = value
+	}
+	if value, ok := uc.mutation.Blocked(); ok {
+		_spec.SetField(user.FieldBlocked, field.TypeBool, value)
+		_node.Blocked = value
+	}
 	if value, ok := uc.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 		_node.Username = value
@@ -186,6 +278,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if nodes := uc.mutation.LoginsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.LoginsTable,
+			Columns: []string{user.LoginsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(login.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

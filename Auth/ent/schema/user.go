@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -18,6 +19,10 @@ func (User) Fields() []ent.Field {
 		field.String("email").Unique(),
 		field.String("password"),
 		field.String("name"),
+		field.String("ip"),
+		field.String("device"),
+		field.Bool("verified").Default(false),
+		field.Bool("blocked").Default(false),
 		field.String("username").
 			Unique(),
 		field.Time("created_at").
@@ -30,5 +35,7 @@ func (User) Fields() []ent.Field {
 
 // Edges of the User.
 func (User) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.To("logins", Login.Type),
+	}
 }

@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"AUTH/ent/login"
 	"AUTH/ent/predicate"
 	"AUTH/ent/user"
 	"context"
@@ -70,6 +71,62 @@ func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
 	return uu
 }
 
+// SetIP sets the "ip" field.
+func (uu *UserUpdate) SetIP(s string) *UserUpdate {
+	uu.mutation.SetIP(s)
+	return uu
+}
+
+// SetNillableIP sets the "ip" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableIP(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetIP(*s)
+	}
+	return uu
+}
+
+// SetDevice sets the "device" field.
+func (uu *UserUpdate) SetDevice(s string) *UserUpdate {
+	uu.mutation.SetDevice(s)
+	return uu
+}
+
+// SetNillableDevice sets the "device" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableDevice(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetDevice(*s)
+	}
+	return uu
+}
+
+// SetVerified sets the "verified" field.
+func (uu *UserUpdate) SetVerified(b bool) *UserUpdate {
+	uu.mutation.SetVerified(b)
+	return uu
+}
+
+// SetNillableVerified sets the "verified" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableVerified(b *bool) *UserUpdate {
+	if b != nil {
+		uu.SetVerified(*b)
+	}
+	return uu
+}
+
+// SetBlocked sets the "blocked" field.
+func (uu *UserUpdate) SetBlocked(b bool) *UserUpdate {
+	uu.mutation.SetBlocked(b)
+	return uu
+}
+
+// SetNillableBlocked sets the "blocked" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableBlocked(b *bool) *UserUpdate {
+	if b != nil {
+		uu.SetBlocked(*b)
+	}
+	return uu
+}
+
 // SetUsername sets the "username" field.
 func (uu *UserUpdate) SetUsername(s string) *UserUpdate {
 	uu.mutation.SetUsername(s)
@@ -112,9 +169,45 @@ func (uu *UserUpdate) SetNillableUpdatedAt(t *time.Time) *UserUpdate {
 	return uu
 }
 
+// AddLoginIDs adds the "logins" edge to the Login entity by IDs.
+func (uu *UserUpdate) AddLoginIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddLoginIDs(ids...)
+	return uu
+}
+
+// AddLogins adds the "logins" edges to the Login entity.
+func (uu *UserUpdate) AddLogins(l ...*Login) *UserUpdate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return uu.AddLoginIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
+}
+
+// ClearLogins clears all "logins" edges to the Login entity.
+func (uu *UserUpdate) ClearLogins() *UserUpdate {
+	uu.mutation.ClearLogins()
+	return uu
+}
+
+// RemoveLoginIDs removes the "logins" edge to Login entities by IDs.
+func (uu *UserUpdate) RemoveLoginIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveLoginIDs(ids...)
+	return uu
+}
+
+// RemoveLogins removes "logins" edges to Login entities.
+func (uu *UserUpdate) RemoveLogins(l ...*Login) *UserUpdate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return uu.RemoveLoginIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -162,6 +255,18 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
+	if value, ok := uu.mutation.IP(); ok {
+		_spec.SetField(user.FieldIP, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Device(); ok {
+		_spec.SetField(user.FieldDevice, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Verified(); ok {
+		_spec.SetField(user.FieldVerified, field.TypeBool, value)
+	}
+	if value, ok := uu.mutation.Blocked(); ok {
+		_spec.SetField(user.FieldBlocked, field.TypeBool, value)
+	}
 	if value, ok := uu.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
@@ -170,6 +275,51 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if uu.mutation.LoginsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.LoginsTable,
+			Columns: []string{user.LoginsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(login.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedLoginsIDs(); len(nodes) > 0 && !uu.mutation.LoginsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.LoginsTable,
+			Columns: []string{user.LoginsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(login.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.LoginsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.LoginsTable,
+			Columns: []string{user.LoginsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(login.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -233,6 +383,62 @@ func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
 	return uuo
 }
 
+// SetIP sets the "ip" field.
+func (uuo *UserUpdateOne) SetIP(s string) *UserUpdateOne {
+	uuo.mutation.SetIP(s)
+	return uuo
+}
+
+// SetNillableIP sets the "ip" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableIP(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetIP(*s)
+	}
+	return uuo
+}
+
+// SetDevice sets the "device" field.
+func (uuo *UserUpdateOne) SetDevice(s string) *UserUpdateOne {
+	uuo.mutation.SetDevice(s)
+	return uuo
+}
+
+// SetNillableDevice sets the "device" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableDevice(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetDevice(*s)
+	}
+	return uuo
+}
+
+// SetVerified sets the "verified" field.
+func (uuo *UserUpdateOne) SetVerified(b bool) *UserUpdateOne {
+	uuo.mutation.SetVerified(b)
+	return uuo
+}
+
+// SetNillableVerified sets the "verified" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableVerified(b *bool) *UserUpdateOne {
+	if b != nil {
+		uuo.SetVerified(*b)
+	}
+	return uuo
+}
+
+// SetBlocked sets the "blocked" field.
+func (uuo *UserUpdateOne) SetBlocked(b bool) *UserUpdateOne {
+	uuo.mutation.SetBlocked(b)
+	return uuo
+}
+
+// SetNillableBlocked sets the "blocked" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableBlocked(b *bool) *UserUpdateOne {
+	if b != nil {
+		uuo.SetBlocked(*b)
+	}
+	return uuo
+}
+
 // SetUsername sets the "username" field.
 func (uuo *UserUpdateOne) SetUsername(s string) *UserUpdateOne {
 	uuo.mutation.SetUsername(s)
@@ -275,9 +481,45 @@ func (uuo *UserUpdateOne) SetNillableUpdatedAt(t *time.Time) *UserUpdateOne {
 	return uuo
 }
 
+// AddLoginIDs adds the "logins" edge to the Login entity by IDs.
+func (uuo *UserUpdateOne) AddLoginIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddLoginIDs(ids...)
+	return uuo
+}
+
+// AddLogins adds the "logins" edges to the Login entity.
+func (uuo *UserUpdateOne) AddLogins(l ...*Login) *UserUpdateOne {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return uuo.AddLoginIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
+}
+
+// ClearLogins clears all "logins" edges to the Login entity.
+func (uuo *UserUpdateOne) ClearLogins() *UserUpdateOne {
+	uuo.mutation.ClearLogins()
+	return uuo
+}
+
+// RemoveLoginIDs removes the "logins" edge to Login entities by IDs.
+func (uuo *UserUpdateOne) RemoveLoginIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveLoginIDs(ids...)
+	return uuo
+}
+
+// RemoveLogins removes "logins" edges to Login entities.
+func (uuo *UserUpdateOne) RemoveLogins(l ...*Login) *UserUpdateOne {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return uuo.RemoveLoginIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -355,6 +597,18 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
+	if value, ok := uuo.mutation.IP(); ok {
+		_spec.SetField(user.FieldIP, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Device(); ok {
+		_spec.SetField(user.FieldDevice, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Verified(); ok {
+		_spec.SetField(user.FieldVerified, field.TypeBool, value)
+	}
+	if value, ok := uuo.mutation.Blocked(); ok {
+		_spec.SetField(user.FieldBlocked, field.TypeBool, value)
+	}
 	if value, ok := uuo.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
@@ -363,6 +617,51 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if uuo.mutation.LoginsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.LoginsTable,
+			Columns: []string{user.LoginsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(login.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedLoginsIDs(); len(nodes) > 0 && !uuo.mutation.LoginsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.LoginsTable,
+			Columns: []string{user.LoginsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(login.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.LoginsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.LoginsTable,
+			Columns: []string{user.LoginsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(login.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues

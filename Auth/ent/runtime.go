@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"AUTH/ent/login"
 	"AUTH/ent/schema"
 	"AUTH/ent/user"
 	"time"
@@ -12,14 +13,32 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	loginFields := schema.Login{}.Fields()
+	_ = loginFields
+	// loginDescCreatedAt is the schema descriptor for created_at field.
+	loginDescCreatedAt := loginFields[4].Descriptor()
+	// login.DefaultCreatedAt holds the default value on creation for the created_at field.
+	login.DefaultCreatedAt = loginDescCreatedAt.Default.(func() time.Time)
+	// loginDescUpdatedAt is the schema descriptor for updated_at field.
+	loginDescUpdatedAt := loginFields[5].Descriptor()
+	// login.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	login.DefaultUpdatedAt = loginDescUpdatedAt.Default.(func() time.Time)
 	userFields := schema.User{}.Fields()
 	_ = userFields
+	// userDescVerified is the schema descriptor for verified field.
+	userDescVerified := userFields[5].Descriptor()
+	// user.DefaultVerified holds the default value on creation for the verified field.
+	user.DefaultVerified = userDescVerified.Default.(bool)
+	// userDescBlocked is the schema descriptor for blocked field.
+	userDescBlocked := userFields[6].Descriptor()
+	// user.DefaultBlocked holds the default value on creation for the blocked field.
+	user.DefaultBlocked = userDescBlocked.Default.(bool)
 	// userDescCreatedAt is the schema descriptor for created_at field.
-	userDescCreatedAt := userFields[4].Descriptor()
+	userDescCreatedAt := userFields[8].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
 	// userDescUpdatedAt is the schema descriptor for updated_at field.
-	userDescUpdatedAt := userFields[5].Descriptor()
+	userDescUpdatedAt := userFields[9].Descriptor()
 	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
 }
