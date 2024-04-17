@@ -9,7 +9,7 @@ require (
 
 require go.uber.org/zap v1.27.0
 
-require github.com/lib/pq v1.10.9 // indirect
+require github.com/lib/pq v1.10.9
 
 require (
 	ariga.io/atlas v0.19.1-0.20240203083654-5948b60a8e43 // indirect
