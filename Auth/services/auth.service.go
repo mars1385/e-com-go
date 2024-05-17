@@ -1,9 +1,10 @@
 package services
 
 import (
-	"AUTH/enums"
-	"AUTH/types"
 	"errors"
+
+	"github.com/mars1385/e-com-go/auth/enums"
+	"github.com/mars1385/e-com-go/auth/types"
 )
 
 func LoginUser(req *types.LoginUser) (types.LoginResponse, error) {

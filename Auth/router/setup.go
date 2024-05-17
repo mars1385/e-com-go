@@ -1,7 +1,7 @@
 package router
 
 import (
-	middlewares "AUTH/middleware"
+	middlewares "github.com/mars1385/e-com-go/auth/middleware"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

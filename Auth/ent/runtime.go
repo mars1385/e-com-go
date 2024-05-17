@@ -3,9 +3,9 @@
 package ent
 
 import (
-	"AUTH/ent/login"
-	"AUTH/ent/schema"
-	"AUTH/ent/user"
+	"github.com/mars1385/e-com-go/auth/ent/login"
+	"github.com/mars1385/e-com-go/auth/ent/schema"
+	"github.com/mars1385/e-com-go/auth/ent/user"
 	"time"
 )
 

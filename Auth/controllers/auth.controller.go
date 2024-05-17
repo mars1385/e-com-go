@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"AUTH/helper"
-	"AUTH/services"
-	"AUTH/types"
 	"encoding/json"
 	"net/http"
+
+	"github.com/mars1385/e-com-go/auth/helper"
+	"github.com/mars1385/e-com-go/auth/services"
+	"github.com/mars1385/e-com-go/auth/types"
 )
 
 func LoginController(w http.ResponseWriter, request *http.Request) {

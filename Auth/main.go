@@ -1,11 +1,12 @@
 package main
 
 import (
-	"AUTH/config"
-	"AUTH/database"
-	logger "AUTH/helper"
-	"AUTH/router"
 	"net/http"
+
+	"github.com/mars1385/e-com-go/auth/config"
+	"github.com/mars1385/e-com-go/auth/database"
+	logger "github.com/mars1385/e-com-go/auth/helper"
+	"github.com/mars1385/e-com-go/auth/router"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package config
 
 import (
-	logger "AUTH/helper"
+	logger "github.com/mars1385/e-com-go/auth/helper"
 
 	"github.com/spf13/viper"
 )

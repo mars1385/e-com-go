@@ -9,10 +9,10 @@ import (
 	"log"
 	"reflect"
 
-	"AUTH/ent/migrate"
+	"github.com/mars1385/e-com-go/auth/ent/migrate"
 
-	"AUTH/ent/login"
-	"AUTH/ent/user"
+	"github.com/mars1385/e-com-go/auth/ent/login"
+	"github.com/mars1385/e-com-go/auth/ent/user"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"

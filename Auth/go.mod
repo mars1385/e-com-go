@@ -1,4 +1,4 @@
-module AUTH
+module github.com/mars1385/e-com-go/auth
 
 go 1.22.1
 

@@ -3,7 +3,7 @@
 package hook
 
 import (
-	"AUTH/ent"
+	"github.com/mars1385/e-com-go/auth/ent"
 	"context"
 	"fmt"
 )

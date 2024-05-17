@@ -3,7 +3,7 @@
 package login
 
 import (
-	"AUTH/ent/predicate"
+	"github.com/mars1385/e-com-go/auth/ent/predicate"
 	"time"
 
 	"entgo.io/ent/dialect/sql"

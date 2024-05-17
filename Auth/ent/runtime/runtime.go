@@ -2,7 +2,7 @@
 
 package runtime
 
-// The schema-stitching logic is generated in AUTH/ent/runtime.go
+// The schema-stitching logic is generated in github.com/mars1385/e-com-go/auth/ent/runtime.go
 
 const (
 	Version = "v0.13.1"                                         // Version of ent codegen.

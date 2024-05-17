@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"AUTH/ent/user"
+	"github.com/mars1385/e-com-go/auth/ent/user"
 	"fmt"
 	"strings"
 	"time"

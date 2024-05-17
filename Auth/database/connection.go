@@ -1,12 +1,10 @@
 package database
 
 import (
-	"AUTH/ent"
-	"AUTH/ent/migrate"
-	logger "AUTH/helper"
-	"context"
 	"fmt"
-	"log"
+
+	"github.com/mars1385/e-com-go/auth/ent"
+	logger "github.com/mars1385/e-com-go/auth/helper"
 
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
@@ -38,16 +36,16 @@ func DbConnection() error {
 
 	Database = client
 
-	ctx := context.Background()
+	// ctx := context.Background()
 	// Run migration.
-	err = client.Schema.Create(
-		ctx,
-		migrate.WithDropIndex(true),
-		migrate.WithDropColumn(true),
-	)
-	if err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
-	}
+	// err = client.Schema.Create(
+	// 	ctx,
+	// 	migrate.WithDropIndex(true),
+	// 	migrate.WithDropColumn(true),
+	// )
+	// if err != nil {
+	// 	log.Fatalf("failed creating schema resources: %v", err)
+	// }
 	logger.Infof("Db connection success")
 
 	return nil

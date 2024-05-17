@@ -3,8 +3,8 @@
 package ent
 
 import (
-	"AUTH/ent/predicate"
-	"AUTH/ent/user"
+	"github.com/mars1385/e-com-go/auth/ent/predicate"
+	"github.com/mars1385/e-com-go/auth/ent/user"
 	"context"
 
 	"entgo.io/ent/dialect/sql"

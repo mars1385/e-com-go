@@ -3,12 +3,12 @@
 package enttest
 
 import (
-	"AUTH/ent"
+	"github.com/mars1385/e-com-go/auth/ent"
 	"context"
 	// required by schema hooks.
-	_ "AUTH/ent/runtime"
+	_ "github.com/mars1385/e-com-go/auth/ent/runtime"
 
-	"AUTH/ent/migrate"
+	"github.com/mars1385/e-com-go/auth/ent/migrate"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

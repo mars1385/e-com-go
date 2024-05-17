@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"AUTH/controllers"
-	"AUTH/helper"
+	"github.com/mars1385/e-com-go/auth/controllers"
+	"github.com/mars1385/e-com-go/auth/helper"
 )
 
 // RegisterRoutes add all routing list here automatically get main router
