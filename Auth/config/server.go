@@ -8,9 +8,20 @@ import (
 )
 
 type ServerConfiguration struct {
-	Port                 string
-	Secret               string
-	LimitCountPerRequest int64
+	Port   string
+	Secret string
+
+	JWT_ACCESS_SECRET  string
+	JWT_REFRESH_SECRET string
+	JWT_ACCESS_TIMER   string
+	JWT_REFRESH_TIMER  string
+
+	DB_NAME     string
+	DB_USER     string
+	DB_PASSWORD string
+	DB_HOST     string
+	DB_SSL      string
+	DB_DEBUG    bool
 }
 
 func ServerConfig() string {
