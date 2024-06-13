@@ -10,11 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	Database *ent.Client
-)
-
-func DbConnection() error {
+func DbConnection() (*ent.Client, error) {
 
 	dbHost := viper.GetString("DB_HOST")
 	dbUser := viper.GetString("DB_USER")
@@ -31,10 +27,8 @@ func DbConnection() error {
 
 		logger.Errorf(err.Error())
 		logger.Fatalf("Db connection error")
-		return err
+		return nil, err
 	}
-
-	Database = client
 
 	// ctx := context.Background()
 	// Run migration.
@@ -48,5 +42,5 @@ func DbConnection() error {
 	// }
 	logger.Infof("Db connection success")
 
-	return nil
+	return client, nil
 }
